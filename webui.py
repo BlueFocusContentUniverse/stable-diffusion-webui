@@ -22,7 +22,7 @@ logging.getLogger("xformers").addFilter(lambda record: 'A matching Triton is not
 
 from modules import paths, timer, import_hook, errors  # noqa: F401
 
-startup_timer = timer.Timer()
+startup_timer = timer.startup_timer
 
 import torch
 import pytorch_lightning   # noqa: F401 # pytorch_lightning should be imported after torch, but it re-enables warnings on import so import once to disable them
@@ -271,8 +271,8 @@ def initialize_rest(*, reload_script_modules=False):
 
     localization.list_localizations(cmd_opts.localizations_dir)
 
-    modules.scripts.load_scripts()
-    startup_timer.record("load scripts")
+    with startup_timer.subcategory("load scripts"):
+        modules.scripts.load_scripts()
 
     if reload_script_modules:
         for module in [module for name, module in sys.modules.items() if name.startswith("modules.ui")]:
@@ -429,9 +429,12 @@ def webui():
 
         ui_extra_networks.add_pages_to_demo(app)
 
-        modules.script_callbacks.app_started_callback(shared.demo, app)
-        startup_timer.record("scripts app_started_callback")
+        startup_timer.record("add APIs")
 
+        with startup_timer.subcategory("app_started_callback"):
+            modules.script_callbacks.app_started_callback(shared.demo, app)
+
+        timer.startup_record = startup_timer.dump()
         print(f"Startup time: {startup_timer.summary()}.")
 
         if cmd_opts.subpath:
@@ -456,6 +459,7 @@ def webui():
             # If we catch a keyboard interrupt, we want to stop the server and exit.
             shared.demo.close()
             break
+
         print('Restarting UI...')
         shared.demo.close()
         time.sleep(0.5)
