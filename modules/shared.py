@@ -44,6 +44,20 @@ restricted_opts = {
     "outdir_init_images"
 }
 
+ui_reorder_categories = [
+    "inpaint",
+    "sampler",
+    "checkboxes",
+    "karras_scheduler",
+    "hires_fix",
+    "dimensions",
+    "cfg",
+    "seed",
+    "batch",
+    "override_settings",
+    "scripts",
+]
+
 # https://huggingface.co/datasets/freddyaboulton/gradio-theme-subdomains/resolve/main/subdomains.json
 gradio_hf_hub_themes = [
     "gradio/glass",
