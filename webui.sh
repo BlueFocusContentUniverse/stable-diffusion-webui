@@ -119,7 +119,7 @@ case "$gpu_info" in
         if [[ -z "${TORCH_COMMAND}" ]]
         then
             pyv="$(${python_cmd} -c 'import sys; print(".".join(map(str, sys.version_info[0:2])))')"
-            if [[ $(bc <<< "$pyv <= 3.10") -eq 1 ]] 
+            if [[ $(bc <<< "$pyv <= 3.10") -eq 1 ]]
             then
                 # Navi users will still use torch 1.13 because 2.0 does not seem to work.
                 export TORCH_COMMAND="pip install torch==1.13.1+rocm5.2 torchvision==0.14.1+rocm5.2 --index-url https://download.pytorch.org/whl/rocm5.2"
@@ -143,7 +143,8 @@ if ! echo "$gpu_info" | grep -q "NVIDIA";
 then
     if echo "$gpu_info" | grep -q "AMD" && [[ -z "${TORCH_COMMAND}" ]]
     then
-        export TORCH_COMMAND="pip install torch==2.0.1+rocm5.4.2 torchvision==0.15.2+rocm5.4.2 --index-url https://download.pytorch.org/whl/rocm5.4.2"
+        # AMD users will still use torch 1.13 because 2.0 does not seem to work.
+        export TORCH_COMMAND="pip install torch==1.13.1+rocm5.2 torchvision==0.14.1+rocm5.2 --index-url https://download.pytorch.org/whl/rocm5.2"
     fi
 fi
 
