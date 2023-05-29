@@ -1,8 +1,10 @@
 import os
 import threading
 
-from modules import shared, errors
-from modules.gitpython_hack import Repo
+import git
+
+from modules import shared
+from modules.errors import print_error
 from modules.paths_internal import extensions_dir, extensions_builtin_dir, script_path  # noqa: F401
 
 extensions = []
@@ -52,7 +54,7 @@ class Extension:
             if os.path.exists(os.path.join(self.path, ".git")):
                 repo = Repo(self.path)
         except Exception:
-            errors.report(f"Error reading github repository info from {self.path}", exc_info=True)
+            print_error(f"Error reading github repository info from {self.path}", exc_info=True)
 
         if repo is None or repo.bare:
             self.remote = None
@@ -68,7 +70,7 @@ class Extension:
                 self.version = self.commit_hash[:8]
 
             except Exception:
-                errors.report(f"Failed reading extension data from Git repository ({self.name})", exc_info=True)
+                print_error(f"Failed reading extension data from Git repository ({self.name})", exc_info=True)
                 self.remote = None
 
         self.have_info_from_repo = True

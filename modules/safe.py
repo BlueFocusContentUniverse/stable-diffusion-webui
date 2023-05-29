@@ -9,6 +9,7 @@ import _codecs
 import zipfile
 import re
 
+from modules.errors import print_error
 
 # PyTorch 1.13 and later have _TypedStorage renamed to TypedStorage
 from modules import errors
@@ -137,7 +138,7 @@ def load_with_extra(filename, extra_handler=None, *args, **kwargs):
             check_pt(filename, extra_handler)
 
     except pickle.UnpicklingError:
-        errors.report(
+        print_error(
             f"Error verifying pickled file from {filename}\n"
             "-----> !!!! The file is most likely corrupted !!!! <-----\n"
             "You can skip this check with --disable-safe-unpickle commandline argument, but that is not going to help you.\n\n",
@@ -145,7 +146,7 @@ def load_with_extra(filename, extra_handler=None, *args, **kwargs):
         )
         return None
     except Exception:
-        errors.report(
+        print_error(
             f"Error verifying pickled file from {filename}\n"
             f"The file may be malicious, so the program is not going to read it.\n"
             f"You can skip this check with --disable-safe-unpickle commandline argument.\n\n",

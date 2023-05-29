@@ -1,16 +1,15 @@
 import inspect
-import os
 from collections import namedtuple
 from typing import Optional, Dict, Any
 
 from fastapi import FastAPI
 from gradio import Blocks
 
-from modules import errors, timer
+from modules.errors import print_error
 
 
 def report_exception(c, job):
-    errors.report(f"Error executing callback {job} for {c.script}", exc_info=True)
+    print_error(f"Error executing callback {job} for {c.script}", exc_info=True)
 
 
 class ImageSaveParams:

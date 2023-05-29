@@ -1,7 +1,7 @@
 import os
 import importlib.util
 
-from modules import errors
+from modules.errors import print_error
 
 
 def load_module(path):
@@ -27,4 +27,4 @@ def preload_extensions(extensions_dir, parser):
                 module.preload(parser)
 
         except Exception:
-            errors.report(f"Error running preload() for {preload_script}", exc_info=True)
+            print_error(f"Error running preload() for {preload_script}", exc_info=True)

@@ -2,7 +2,8 @@ import html
 import threading
 import time
 
-from modules import shared, progress, errors
+from modules import shared, progress
+from modules.errors import print_error
 
 queue_lock = threading.Lock()
 
@@ -61,7 +62,7 @@ def wrap_gradio_call(func, extra_outputs=None, add_stats=False):
             arg_str = f"Arguments: {args} {kwargs}"[:max_debug_str_len]
             if len(arg_str) > max_debug_str_len:
                 arg_str += f" (Argument list truncated at {max_debug_str_len}/{len(arg_str)} characters)"
-            errors.report(f"{message}\n{arg_str}", exc_info=True)
+            print_error(f"{message}\n{arg_str}", exc_info=True)
 
             shared.state.job = ""
             shared.state.job_count = 0

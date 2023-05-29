@@ -5,7 +5,8 @@ import shlex
 import modules.scripts as scripts
 import gradio as gr
 
-from modules import sd_samplers, errors
+from modules import sd_samplers
+from modules.errors import print_error
 from modules.processing import Processed, process_images
 from modules.shared import state
 
@@ -133,7 +134,7 @@ class Script(scripts.Script):
                 try:
                     args = cmdargs(line)
                 except Exception:
-                    errors.report(f"Error parsing line {line} as commandline", exc_info=True)
+                    print_error(f"Error parsing line {line} as commandline", exc_info=True)
                     args = {"prompt": line}
             else:
                 args = {"prompt": line}

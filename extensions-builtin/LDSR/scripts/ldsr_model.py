@@ -2,6 +2,7 @@ import os
 
 from basicsr.utils.download_util import load_file_from_url
 
+from modules.errors import print_error
 from modules.upscaler import Upscaler, UpscalerData
 from ldsr_model_arch import LDSR
 from modules import shared, script_callbacks, errors
@@ -50,7 +51,7 @@ class UpscalerLDSR(Upscaler):
         try:
             return LDSR(model, yaml)
         except Exception:
-            errors.report("Error importing LDSR", exc_info=True)
+            print_error("Error importing LDSR", exc_info=True)
         return None
 
     def do_upscale(self, img, path):

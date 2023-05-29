@@ -3,35 +3,19 @@ import textwrap
 import traceback
 
 
-exception_records = []
-
-
-def record_exception():
-    _, e, tb = sys.exc_info()
-    if e is None:
-        return
-
-    if exception_records and exception_records[-1] == e:
-        return
-
-    exception_records.append((e, tb))
-
-    if len(exception_records) > 5:
-        exception_records.pop(0)
-
-
-def report(message: str, *, exc_info: bool = False) -> None:
+def print_error(
+    message: str,
+    *,
+    exc_info: bool = False,
+) -> None:
     """
     Print an error message to stderr, with optional traceback.
     """
-
-    record_exception()
-
     for line in message.splitlines():
         print("***", line, file=sys.stderr)
     if exc_info:
         print(textwrap.indent(traceback.format_exc(), "    "), file=sys.stderr)
-        print("---", file=sys.stderr)
+        print("---")
 
 
 def print_error_explanation(message):

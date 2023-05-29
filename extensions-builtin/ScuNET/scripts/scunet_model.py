@@ -12,6 +12,7 @@ import modules.upscaler
 from modules import devices, modelloader, script_callbacks, errors
 from scunet_model_arch import SCUNet as net
 
+from modules.errors import print_error
 from modules.shared import opts
 
 
@@ -38,7 +39,7 @@ class UpscalerScuNET(modules.upscaler.Upscaler):
                 scaler_data = modules.upscaler.UpscalerData(name, file, self, 4)
                 scalers.append(scaler_data)
             except Exception:
-                errors.report(f"Error loading ScuNET model: {file}", exc_info=True)
+                print_error(f"Error loading ScuNET model: {file}", exc_info=True)
         if add_model2:
             scaler_data2 = modules.upscaler.UpscalerData(self.model_name2, self.model_url2, self)
             scalers.append(scaler_data2)

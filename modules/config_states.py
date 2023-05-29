@@ -11,7 +11,8 @@ from datetime import datetime
 from collections import OrderedDict
 import git
 
-from modules import shared, extensions, errors
+from modules import shared, extensions
+from modules.errors import print_error
 from modules.paths_internal import script_path, config_states_dir
 
 
@@ -51,7 +52,7 @@ def get_webui_config():
         if os.path.exists(os.path.join(script_path, ".git")):
             webui_repo = git.Repo(script_path)
     except Exception:
-        errors.report(f"Error reading webui git info from {script_path}", exc_info=True)
+        print_error(f"Error reading webui git info from {script_path}", exc_info=True)
 
     webui_remote = None
     webui_commit_hash = None
@@ -131,7 +132,7 @@ def restore_webui_config(config):
         if os.path.exists(os.path.join(script_path, ".git")):
             webui_repo = git.Repo(script_path)
     except Exception:
-        errors.report(f"Error reading webui git info from {script_path}", exc_info=True)
+        print_error(f"Error reading webui git info from {script_path}", exc_info=True)
         return
 
     try:
@@ -139,7 +140,7 @@ def restore_webui_config(config):
         webui_repo.git.reset(webui_commit_hash, hard=True)
         print(f"* Restored webui to commit {webui_commit_hash}.")
     except Exception:
-        errors.report(f"Error restoring webui to commit{webui_commit_hash}")
+        print_error(f"Error restoring webui to commit{webui_commit_hash}")
 
 
 def restore_extension_config(config):
