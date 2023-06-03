@@ -13,30 +13,6 @@ import launch
 from modules import paths_internal, timer
 
 checksum_token = "DontStealMyGamePlz__WINNERS_DONT_USE_DRUGS__DONT_COPY_THAT_FLOPPY"
-environment_whitelist = {
-    "GIT",
-    "INDEX_URL",
-    "WEBUI_LAUNCH_LIVE_OUTPUT",
-    "GRADIO_ANALYTICS_ENABLED",
-    "PYTHONPATH",
-    "TORCH_INDEX_URL",
-    "TORCH_COMMAND",
-    "REQS_FILE",
-    "XFORMERS_PACKAGE",
-    "GFPGAN_PACKAGE",
-    "CLIP_PACKAGE",
-    "OPENCLIP_PACKAGE",
-    "STABLE_DIFFUSION_REPO",
-    "K_DIFFUSION_REPO",
-    "CODEFORMER_REPO",
-    "BLIP_REPO",
-    "STABLE_DIFFUSION_COMMIT_HASH",
-    "K_DIFFUSION_COMMIT_HASH",
-    "CODEFORMER_COMMIT_HASH",
-    "BLIP_COMMIT_HASH",
-    "COMMANDLINE_ARGS",
-    "IGNORE_CMD_ARGS_ERRORS",
-}
 
 
 def pretty_bytes(num, suffix="B"):
@@ -96,7 +72,7 @@ def get_dict():
         },
         "Extensions": get_extensions(enabled=True),
         "Inactive extensions": get_extensions(enabled=False),
-        "Environment": get_environment(),
+        "Environment": {k: os.environ[k] for k in sorted(os.environ)},
         "Config": get_config(),
         "Startup": timer.startup_record,
         "Packages": sorted([f"{pkg.key}=={pkg.version}" for pkg in pkg_resources.working_set]),
@@ -112,14 +88,11 @@ def format_traceback(tb):
 def get_exceptions():
     try:
         from modules import errors
+        items = [x for x in reversed(errors.exception_records)]
 
-        return [{"exception": str(e), "traceback": format_traceback(tb)} for e, tb in reversed(errors.exception_records)]
+        return [{"exception": str(e), "traceback": format_traceback(tb)} for e, tb in items]
     except Exception as e:
         return str(e)
-
-
-def get_environment():
-    return {k: os.environ[k] for k in sorted(os.environ) if k in environment_whitelist}
 
 
 re_newline = re.compile(r"\r*\n")
