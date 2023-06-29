@@ -5,7 +5,7 @@ from collections import namedtuple
 
 import gradio as gr
 
-from modules import shared, paths, script_callbacks, extensions, script_loading, scripts_postprocessing, errors
+from modules import shared, paths, script_callbacks, extensions, script_loading, scripts_postprocessing, errors, timer
 
 AlwaysVisible = object()
 
